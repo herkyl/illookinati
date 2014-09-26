@@ -20,7 +20,6 @@ var illookinati = function (options) {
   }
   
   document.addEventListener('mousemove', onMove);
-  document.addEventListener('touchmove', onMove);
 
   function onMove(event) {
     event.preventDefault();
