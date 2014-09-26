@@ -6,7 +6,7 @@
     "Serge Herkül <s.herkyl@gmail.com>"
   ],
   "description": "Illookinati is wathing us",
-  "main": "src/main.js",
+  "main": "./src/main.js",
   "license": "MIT",
   "ignore": [
     "**/.*",
