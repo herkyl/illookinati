@@ -1,0 +1,20 @@
+{
+  "name": "illookinati",
+  "version": "0.1.0",
+  "homepage": "http://herkyl.github.io/illookinati/",
+  "authors": [
+    "Serge Herkül <s.herkyl@gmail.com>"
+  ],
+  "description": "Illookinati is wathing us",
+  "main": "src/main.js",
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests",
+    "images/",
+    "index.html"
+  ]
+}
