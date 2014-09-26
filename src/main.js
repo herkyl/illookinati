@@ -4,6 +4,7 @@ var illookinati = function (options) {
   options = options || {};
 
   var vector,
+      unitDist = 1,
       rect = options.target.getBoundingClientRect(),
       isWebkit = 'WebkitAppearance' in document.documentElement.style,
       center = {
@@ -26,8 +27,17 @@ var illookinati = function (options) {
     var x = event.clientX,
         y = event.clientY;
     vector = getUnitVector(x, y);
+    unitDist = getUnitDist(x, y);
     window.requestAnimationFrame(updateDOM);
   }
+  
+  function getUnitDist(x,y){
+    var distx = Math.abs(center.x-x);
+    var disty = Math.abs(center.y-y);
+
+    return 2*Math.sqrt(distx * distx + disty * disty)/window.innerWidth;
+  }
+
   
   function getUnitVector(x, y) {
     var vector,
@@ -49,8 +59,8 @@ var illookinati = function (options) {
   function updateDOM() {
     var transform =
       'perspective(' + options.targetPerspective + ') ' +
-      'rotateX(' + Math.round(vector.y * options.max) + 'deg) ' +
-      'rotateY(' + Math.round(vector.x * options.max) + 'deg)';
+      'rotateX(' + Math.round(vector.y * options.max * unitDist) + 'deg) ' +
+      'rotateY(' + Math.round(vector.x * options.max * unitDist) + 'deg)';
     options.target.style.transform = transform;
     options.target.style.webkitTransform = transform;
   }
