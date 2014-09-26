@@ -1,4 +1,4 @@
-window.illookinati = function (options) {
+var illookinati = function (options) {
   if (!options.target) throw new Error('You must define a target');
   options = options || {};
   var vector,
@@ -49,12 +49,4 @@ window.illookinati = function (options) {
       'rotateX(' + Math.round(vector.y * options.max) + 'deg) ' +
       'rotateY(' + Math.round(vector.x * options.max) + 'deg)';
   }
-}
-
-window.onload = function () {
-  illookinati({
-    target: document.querySelectorAll('.flipper')[0],
-    max: 50
-  });
-}
-
+};
