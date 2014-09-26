@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Illookinati is watching us</title>
+    <style>
+        .container {
+            margin: 0 auto;
+            width: 1000px;
+        }
+        .container-center {
+            text-align: center;
+        }
+        a {
+            font-family: "Comic Sans MS", "Comic Sans", cursive;
+        }
+        body {
+            background: rgb(66, 78, 61);
+            color: wheat;
+            font-size: 17px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="container-center">
+            <img id="giphy" src="images/giphy.gif" width="300" height="300"/><br/>
+            <img id="logo1" src="images/illuminati.png" width="300" height="300"/>
+            <img id="logo2" src="images/illuminati.png" width="300" height="300"/>
+            <h1>Illookinati.js</h1>
+        </div>
+        Illookinati helps any element watch the mouse.. constantly.
+        <br/>
+        Usage:
+        <pre>
+            <code>
+                illookinati({
+                    target: document.querySelector('img#giphy'),
+                    max: 50 // optional max angle
+                    targetPerspective: '800px' // optional perspective of the element
+                });
+            </code>
+        </pre>
+    </div>
+    <script>
+        window.illookinati = function (options) {
+            if (!options.target) throw new Error('You must define a target');
+            options = options || {};
+            var vector,
+                    rect = options.target.getBoundingClientRect(),
+                    CENTER = {
+                        x: rect.left + rect.width / 2,
+                        y: rect.top + rect.height / 2
+                    };
+
+
+            options.targetPerspective = options.targetPerspective || '800px';
+            options.max = options.max || 30;
+            options.target.style.transition = '0.1s';
+            options.target.style.transformStyle = 'preserve-3d';
+            options.target.style.transformOrigin = 'center center';
+
+            document.addEventListener('mousemove', onMove);
+            document.addEventListener('touchmove', onMove);
+
+            function onMove(event) {
+                event.preventDefault();
+                var x = event.clientX || event.originalEvent.touches[0].pageX,
+                        y = event.clientY || event.originalEvent.touches[0].pageY;
+                vector = getUnitVector(x, y);
+                window.requestAnimationFrame(updateDOM);
+            }
+
+            function getUnitVector(x, y) {
+                var vector,
+                        length;
+
+                vector = {
+                    x: (CENTER.x - x) * -1,
+                    y: CENTER.y - y
+                };
+
+                length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
+
+                return {
+                    x: vector.x / length,
+                    y: vector.y / length
+                };
+            }
+
+            function updateDOM() {
+                options.target.style.transform =
+                        'perspective(' + options.targetPerspective + ') ' +
+                        'rotateX(' + Math.round(vector.y * options.max) + 'deg) ' +
+                        'rotateY(' + Math.round(vector.x * options.max) + 'deg)';
+            }
+        };
+
+        illookinati({
+            target: document.querySelector('img#giphy'),
+            max: 50
+        });
+        illookinati({
+            target: document.querySelector('img#logo1'),
+            max: 30
+        });
+        illookinati({
+            target: document.querySelector('img#logo2'),
+            max: 30
+        });
+    </script>
+</body>
+</html>
