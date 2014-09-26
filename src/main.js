@@ -1,27 +1,31 @@
 var illookinati = function (options) {
+
   if (!options.target) throw new Error('You must define a target');
   options = options || {};
+
   var vector,
       rect = options.target.getBoundingClientRect(),
-      CENTER = {
+      isWebkit = 'WebkitAppearance' in document.documentElement.style,
+      center = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2
       };
       
-  
   options.targetPerspective = options.targetPerspective || '800px';
   options.max = options.max || 30;
-  options.target.style.transition = '0.1s';
   options.target.style.transformStyle = 'preserve-3d';
   options.target.style.transformOrigin = 'center center';
+  if (isWebkit) { // Other browsers lag with this
+    options.target.style.transition = '0.1s';
+  }
   
   document.addEventListener('mousemove', onMove);
   document.addEventListener('touchmove', onMove);
 
   function onMove(event) {
     event.preventDefault();
-    var x = event.clientX || event.originalEvent.touches[0].pageX,
-        y = event.clientY || event.originalEvent.touches[0].pageY;
+    var x = event.clientX,
+        y = event.clientY;
     vector = getUnitVector(x, y);
     window.requestAnimationFrame(updateDOM);
   }
@@ -31,8 +35,8 @@ var illookinati = function (options) {
         length;
     
     vector = {
-      x: (CENTER.x - x) * -1,
-      y: CENTER.y - y
+      x: (center.x - x) * -1,
+      y: center.y - y
     };
     
     length = Math.sqrt(vector.x * vector.x + vector.y * vector.y);
@@ -44,9 +48,12 @@ var illookinati = function (options) {
   }
 
   function updateDOM() {
-    options.target.style.transform = 
+    var transform =
       'perspective(' + options.targetPerspective + ') ' +
       'rotateX(' + Math.round(vector.y * options.max) + 'deg) ' +
       'rotateY(' + Math.round(vector.x * options.max) + 'deg)';
+    options.target.style.transform = transform;
+    options.target.style.webkitTransform = transform;
   }
+
 };
