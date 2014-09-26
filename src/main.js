@@ -4,7 +4,7 @@ var illookinati = function (options) {
   options = options || {};
 
   var vector,
-      unitDist = 1,
+      unitDistance = 1,
       rect = options.target.getBoundingClientRect(),
       isWebkit = 'WebkitAppearance' in document.documentElement.style,
       center = {
@@ -14,6 +14,7 @@ var illookinati = function (options) {
       
   options.targetPerspective = options.targetPerspective || '800px';
   options.max = options.max || 30;
+  options.useDistance = options.useDistance || false;
   options.target.style.transformStyle = 'preserve-3d';
   options.target.style.transformOrigin = 'center center';
   if (isWebkit) { // Other browsers lag with this
@@ -26,19 +27,22 @@ var illookinati = function (options) {
     event.preventDefault();
     var x = event.clientX,
         y = event.clientY;
-    vector = getUnitVector(x, y);
-    unitDist = getUnitDist(x, y);
+    unitVector = getUnitVector(x, y);
+    if (options.useDistance) {
+      unitDistance = getUnitDistance(x, y);
+    }
     window.requestAnimationFrame(updateDOM);
   }
   
-  function getUnitDist(x,y){
-    var distx = Math.abs(center.x-x);
-    var disty = Math.abs(center.y-y);
+  function getUnitDistance(x, y) {
+    var dist = {
+      x: Math.abs(center.x - x),
+      y: Math.abs(center.y - y)
+    };
 
-    return 2*Math.sqrt(distx * distx + disty * disty)/window.innerWidth;
+    return 2 * Math.sqrt(dist.x * dist.x + dist.y * dist.y) / window.innerWidth;
   }
 
-  
   function getUnitVector(x, y) {
     var vector,
         length;
@@ -59,8 +63,8 @@ var illookinati = function (options) {
   function updateDOM() {
     var transform =
       'perspective(' + options.targetPerspective + ') ' +
-      'rotateX(' + Math.round(vector.y * options.max * unitDist) + 'deg) ' +
-      'rotateY(' + Math.round(vector.x * options.max * unitDist) + 'deg)';
+      'rotateX(' + Math.round(unitVector.y * options.max * (unitDistance || 1)) + 'deg) ' +
+      'rotateY(' + Math.round(unitVector.x * options.max * (unitDistance || 1)) + 'deg)';
     options.target.style.transform = transform;
     options.target.style.webkitTransform = transform;
   }

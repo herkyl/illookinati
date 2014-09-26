@@ -47,8 +47,10 @@
             <code>
                 illookinati({
                     target: document.querySelector('img#giphy'),
-                    max: 50 // optional max angle
-                    targetPerspective: '800px' // optional perspective of the element
+                    max: 50, // optional max angle
+                    targetPerspective: '800px', // optional perspective of the element
+                    useDistance: false // optional, if true the angle of rotation will depend on 
+                                       // cursor's distance from the target (frog gif uses it)
                 });
             </code>
         </pre>
@@ -58,7 +60,8 @@
     <script>
         illookinati({
             target: document.querySelector('img#giphy'),
-            max: 50
+            useDistance: true,
+            max: 80
         });
         illookinati({
             target: document.querySelector('img#logo1'),
