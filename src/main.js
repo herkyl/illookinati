@@ -24,7 +24,6 @@ var illookinati = function (options) {
   document.addEventListener('mousemove', onMove);
 
   function onMove(event) {
-    event.preventDefault();
     var x = event.clientX,
         y = event.clientY;
     unitVector = getUnitVector(x, y);
