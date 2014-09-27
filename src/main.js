@@ -3,11 +3,11 @@ var illookinati = function (options) {
   if (!options.target) throw new Error('You must define a target');
   options = options || {};
 
-  var vector,
-      unitDistance = 1,
-      rect = options.target.getBoundingClientRect(),
-      isWebkit = 'WebkitAppearance' in document.documentElement.style,
-      center = {
+  var unitVector
+    , unitDistance
+    , rect = options.target.getBoundingClientRect()
+    , isWebkit = 'WebkitAppearance' in document.documentElement.style
+    , center = {
         x: rect.left + rect.width / 2,
         y: rect.top + rect.height / 2
       };
@@ -60,10 +60,11 @@ var illookinati = function (options) {
   }
 
   function updateDOM() {
-    var transform =
+    var distanceUnitAngle = isNaN(unitDistance) ? 1 : unitDistance
+      , transform =
       'perspective(' + options.targetPerspective + ') ' +
-      'rotateX(' + Math.round(unitVector.y * options.max * (unitDistance || 1)) + 'deg) ' +
-      'rotateY(' + Math.round(unitVector.x * options.max * (unitDistance || 1)) + 'deg)';
+      'rotateX(' + Math.round(unitVector.y * options.max * distanceUnitAngle) + 'deg) ' +
+      'rotateY(' + Math.round(unitVector.x * options.max * distanceUnitAngle) + 'deg)';
     options.target.style.transform = transform;
     options.target.style.webkitTransform = transform;
   }
